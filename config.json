@@ -6,7 +6,7 @@
     "location": "France",
     "Period": "Past Week",
     "AvgExperience": "2",
-    "resolution": "--window-size=1300,700",
+    "resolution": "--window-size=1300,600",
     "baseURL": "https://www.linkedin.com/feed",
     "numberOfPagination": 14
 }

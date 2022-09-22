@@ -150,6 +150,12 @@ async function FillAndApply() {
             console.log("finished Scrolling page N°" + (i - 1));
         }
     }
+    console.log("first child");
+    await buttonClick(
+        `button[aria-label="Page 1"]
+        `
+
+    );
 }
 async function jobsApply() {
     await buttonClick("#global-nav > div > nav > ul > li:nth-child(3)");
