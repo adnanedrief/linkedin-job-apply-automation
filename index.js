@@ -9,8 +9,7 @@ const avgOfExp = data.AvgExperience;
 const periodOfTime = data.Period; // you can choose : Last 24 hours or Last week
 const browserPath = data.ChromePath;
 const resolution = data.resolution; // you can choose : --start-maximized or --window-size=1400,720
-const nbrOfExecution = data.numberOfExecution;
-const numberOfPagination = data.numberOfPagination;
+const numberOfPagination = data.numberOfPagination; // numberOfPagination it means number of execution
 let page = "";
 let browser = "";
 async function logs() {
@@ -89,15 +88,16 @@ async function jobCriteriaByType() {
 async function Scrolling() {
     await page.evaluate(() => {
         document
-            .querySelector('ul[class="scaffold-layout__list-container"]')
+            .querySelector(
+                'div[class="scaffold-layout__list-detail-inner"]>section>div>ul'
+            )
             .scrollIntoView();
     });
 }
 async function FillAndApply() {
     let state = true;
-    let counter = 1;
     //fix this part of code                                       !=null
-    if ((await page.$("div:nth-child(4) > div > div > div>button")) == null) {
+    if ((await page.$("div:nth-child(4) > div > div > div>button")) != null) {
         // to find the EASY APPLY button
         await buttonClick("div:nth-child(4) > div > div > div>button");
         while (state == true) {
@@ -133,7 +133,7 @@ async function FillAndApply() {
         let lastIndexForPagination = 1;
         while (i <= numberOfPagination) {
             console.log("Scrolling the page N°" + i);
-            await page.waitForTimeout(4000);
+            // await page.waitForTimeout(4000);
             //Loop trough list elements
             for (let index = 1; index <= 25; index++) {
                 await Scrolling();
@@ -162,6 +162,7 @@ async function jobsApply() {
     await jobCriteriaByType();
     await page.waitForTimeout(2000);
     // to hide messages dialog
+    await page.waitForTimeout(2000);
     await FillAndApply();
 }
 async function main() {

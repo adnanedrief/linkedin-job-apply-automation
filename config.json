@@ -7,7 +7,6 @@
     "Period": "Past Week",
     "AvgExperience": "2",
     "resolution": "--window-size=1300,700",
-    "numberOfExecution": 10,
     "baseURL": "https://www.linkedin.com/feed",
-    "numberOfPagination": 15
+    "numberOfPagination": 14
 }
