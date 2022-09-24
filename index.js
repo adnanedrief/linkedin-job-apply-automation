@@ -94,18 +94,17 @@ async function Scrolling() {
             .scrollIntoView();
     });
 }
-async function FillAndApply() {
+async function FillAndApplyOld() {
     let state = true;
     //fix this part of code                                       !=null
-    if ((await page.$("div:nth-child(4) > div > div > div>button")) != null) {
+    if ((await page.$("div:nth-child(4) > div > div > div>button")) == null) {
         // to find the EASY APPLY button
         await buttonClick("div:nth-child(4) > div > div > div>button");
         while (state == true) {
+            await page.waitForTimeout(4000);
             if (
                 // the next button
-                await buttonClick(
-                    'div[class="display-flex justify-flex-end ph5 pv4"]>button'
-                )
+                await buttonClick('div[class="display-flex justify-flex-end ph5 pv4"]>button')
             ) {
                 state = true;
             } else {
@@ -133,7 +132,7 @@ async function FillAndApply() {
         let lastIndexForPagination = 1;
         while (i <= numberOfPagination) {
             console.log("Scrolling the page N°" + i);
-            // await page.waitForTimeout(4000);
+            await page.waitForTimeout(3000);
             //Loop trough list elements
             for (let index = 1; index <= 25; index++) {
                 await Scrolling();
@@ -156,6 +155,64 @@ async function FillAndApply() {
         `
 
     );
+}
+async function FillAndApply() {
+    let state = true;
+    //fix this part of code                                       !=null
+    /* -------------------------------------------------------------------------- */
+    // if ((await page.$("div:nth-child(4) > div > div > div>button")) == null) {
+    //     // to find the EASY APPLY button
+    //     await buttonClick("div:nth-child(4) > div > div > div>button");
+    //     while (state == true) {
+    //         await page.waitForTimeout(4000);
+    //         if (
+    //             // the next button
+    //             await buttonClick('div[class="display-flex justify-flex-end ph5 pv4"]>button')
+    //         ) {
+    //             state = true;
+    //         } else {
+    //             state = false;
+    //             break;
+    //         }
+    //         await page.waitForTimeout(2000);
+    //     }
+    //     if (state == false) {
+    //         // review button and submit button
+    //         await waitForSelectorAndType("input", avgOfExp);
+    //         await buttonClick(
+    //             'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
+    //         );
+    //         await page.waitForTimeout(2000);
+    //         await waitForSelectorAndType("input", avgOfExp);
+    //         await buttonClick(
+    //             'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
+    //         );
+    //         await page.waitForTimeout(2000);
+    //         await buttonClick('div[id="artdeco-modal-outlet"]');
+    //     }
+    // }
+    /* -------------------------------------------------------------------------- */
+    let i = 1;
+    let lastIndexForPagination = 1;
+    while (i <= numberOfPagination) {
+        console.log("Scrolling the page N°" + i);
+        //Loop trough list elements
+        for (let index = 1; index <= 25; index++) {
+            await page.waitForTimeout(3000);
+            await Scrolling();
+            console.log(index);
+            await buttonClick(
+                `li[class*="jobs-search-results__list-item"]:nth-child(${index})>div>div>div>div+div>div`
+            );
+            if (index === 25) lastIndexForPagination++;
+        }
+        await buttonClick(
+            `ul[class="artdeco-pagination__pages artdeco-pagination__pages--number"]>li:nth-child(${lastIndexForPagination})`
+        );
+        i++;
+        console.log("finished Scrolling page N°" + (i - 1));
+    }
+
 }
 async function jobsApply() {
     await buttonClick("#global-nav > div > nav > ul > li:nth-child(3)");
