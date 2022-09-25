@@ -14,171 +14,166 @@ const nbrOfOffersPerPage = data.numberOfOffersPerPage; // don't touch it leave i
 let page = "";
 let browser = "";
 async function logs() {
-    console.log("mydata is :" + JSON.stringify(data));
+  console.log("mydata is :" + JSON.stringify(data));
 }
 async function Login() {
-    await findTargetAndType('[name="session_key"]', email);
-    await findTargetAndType('[name="session_password"]', password);
-    page.keyboard.press("Enter");
+  await findTargetAndType('[name="session_key"]', email);
+  await findTargetAndType('[name="session_password"]', password);
+  page.keyboard.press("Enter");
 }
 async function initiliazer() {
-    browser = await puppeteer.launch({
-        headless: false,
-        executablePath: browserPath,
-        args: [resolution],
-        defaultViewport: null,
-        userDataDir: "./userData",
-        //uncomment userDataDir line  if you want to store your session and remove login() from main()
-        // and change the baseURL to https://www.linkedin.com/feed
-    });
-    page = await browser.newPage();
-    const pages = await browser.pages();
-    if (pages.length > 1) {
-        await pages[0].close();
-    }
-    await page.goto(BaseURL);
+  browser = await puppeteer.launch({
+    headless: false,
+    executablePath: browserPath,
+    args: [resolution],
+    defaultViewport: null,
+    userDataDir: "./userData",
+    //uncomment userDataDir line  if you want to store your session and remove login() from main()
+    // and change the baseURL to https://www.linkedin.com/feed
+  });
+  page = await browser.newPage();
+  const pages = await browser.pages();
+  if (pages.length > 1) {
+    await pages[0].close();
+  }
+  await page.goto(BaseURL);
 }
 async function findTargetAndType(target, value) {
-    const f = await page.$(target);
-    await f.type(value);
+  const f = await page.$(target);
+  await f.type(value);
 }
 async function waitForSelectorAndType(target, value) {
-    const typer = await page.waitForSelector(target, { visible: true });
-    await typer.type(value);
+  const typer = await page.waitForSelector(target, { visible: true });
+  await typer.type(value);
 }
 async function buttonClick(selector) {
-    await page.waitForSelector(selector);
-    const buttonClick = await page.$(selector);
-    await buttonClick.click();
+  await page.waitForSelector(selector);
+  const buttonClick = await page.$(selector);
+  await buttonClick.click();
 }
 async function jobCriteriaByTime() {
-    await buttonClick(".search-reusables__filter-binary-toggle"); // select EASY APPLY
+  await buttonClick(".search-reusables__filter-binary-toggle"); // select EASY APPLY
+  await page.waitForTimeout(2000);
+  // dropmenu to chose the period
+  await buttonClick(
+    "ul.search-reusables__filter-list>li:nth-child(4)>div>span>button"
+  );
+  if (periodOfTime == "Past 24 hours") {
     await page.waitForTimeout(2000);
-    // dropmenu to chose the period
     await buttonClick(
-        "ul.search-reusables__filter-list>li:nth-child(4)>div>span>button"
+      "form > fieldset > div.pl4.pr6 > ul > li:nth-child(4) > label"
     );
-    if (periodOfTime == "Past 24 hours") {
-        await page.waitForTimeout(2000);
-        await buttonClick(
-            "form > fieldset > div.pl4.pr6 > ul > li:nth-child(4) > label"
-        );
-        await page.waitForTimeout(2000);
-        await buttonClick(".render-mode-BIGPIPE");
-    } else {
-        // Past week
-        await page.waitForTimeout(2000);
-        await buttonClick(
-            "form > fieldset > div.pl4.pr6 > ul > li:nth-child(3) > label"
-        );
-        await page.waitForTimeout(2000);
-        await buttonClick(".render-mode-BIGPIPE");
-    }
-}
-async function jobCriteriaByType() {
-    // dropmenu to chose the Hyprid/onSite/Remote type of Work
-    await buttonClick(
-        'div[id="hoverable-outlet-on-site/remote-filter-value"]+span>button'
-    );
-    await page.waitForTimeout(2000);
-    await buttonClick("label[for^='workplaceType']");
     await page.waitForTimeout(2000);
     await buttonClick(".render-mode-BIGPIPE");
+  } else {
+    // Past week
     await page.waitForTimeout(2000);
+    await buttonClick(
+      "form > fieldset > div.pl4.pr6 > ul > li:nth-child(3) > label"
+    );
+    await page.waitForTimeout(2000);
+    await buttonClick(".render-mode-BIGPIPE");
+  }
+}
+async function jobCriteriaByType() {
+  // dropmenu to chose the Hyprid/onSite/Remote type of Work
+  await buttonClick(
+    'div[id="hoverable-outlet-on-site/remote-filter-value"]+span>button'
+  );
+  await page.waitForTimeout(2000);
+  await buttonClick("label[for^='workplaceType']");
+  await page.waitForTimeout(2000);
+  await buttonClick(".render-mode-BIGPIPE");
+  await page.waitForTimeout(2000);
 }
 async function Scrolling() {
-    await page.evaluate(() => {
-        document
-            .querySelector(
-                'div[class="scaffold-layout__list-detail-inner"]>section>div>ul'
-            )
-            .scrollIntoView();
-    });
+  await page.evaluate(() => {
+    document
+      .querySelector(
+        'div[class="scaffold-layout__list-detail-inner"]>section>div>ul'
+      )
+      .scrollIntoView();
+  });
 }
-
 async function FillAndApply() {
-
-    let i = 1;
-    let lastIndexForPagination = 1;
-    while (i <= numberOfPagination) {
-        console.log("Scrolling the page N°" + i);
-        //Loop trough list elements
-        for (let index = 1; index <= nbrOfOffersPerPage; index++) {
-            let state = true;
-            await page.waitForTimeout(3000);
-            await Scrolling();
-            console.log(index);
+  let i = 1;
+  let lastIndexForPagination = 1;
+  while (i <= numberOfPagination) {
+    console.log("Scrolling the page N°" + i);
+    //Loop trough list elements
+    for (let index = 1; index <= nbrOfOffersPerPage; index++) {
+      let state = true;
+      await page.waitForTimeout(3000);
+      await Scrolling();
+      console.log(`Apply N°[${index}]`);
+      await buttonClick(
+        `li[class*="jobs-search-results__list-item"]:nth-child(${index})>div>div>div>div+div>div`
+      );
+      if (index === nbrOfOffersPerPage) lastIndexForPagination++;
+      /* -------------------------- FIX THIS PART OF CODE ----------------------- */
+      await page.waitForTimeout(2000);
+      if ((await page.$("div:nth-child(4) > div > div > div>button")) != null) {
+        // to find the EASY APPLY button
+        await buttonClick("div:nth-child(4) > div > div > div>button");
+        while (state == true) {
+          await page.waitForTimeout(2000);
+          if (
+            // the next button
             await buttonClick(
-                `li[class*="jobs-search-results__list-item"]:nth-child(${index})>div>div>div>div+div>div`
-            );
-            if (index === nbrOfOffersPerPage) lastIndexForPagination++;
-            /* -------------------------- FIX THIS PART OF CODE ----------------------- */
-            /*                                                               !=null     */
-            await page.waitForTimeout(2000);
-            if ((await page.$("div:nth-child(4) > div > div > div>button")) != null) {
-                // to find the EASY APPLY button
-                await buttonClick("div:nth-child(4) > div > div > div>button");
-                while (state == true) {
-                    await page.waitForTimeout(2000);
-                    if (
-                        // the next button
-                        await buttonClick('div[class="display-flex justify-flex-end ph5 pv4"]>button')
-                    ) {
-                        state = true;
-                    } else {
-                        state = false;
-                        break;
-                    }
-                    await page.waitForTimeout(2000);
-                }
-                if (state == false) {
-                    // review button and submit button
-                    //await waitForSelectorAndType('div[data-test-single-line-text-input-wrap]', avgOfExp);
-                    await page.waitForTimeout(2000);
-                    await buttonClick(
-                        'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
-                    );
-                    await page.waitForTimeout(2000);
-                    //await waitForSelectorAndType("input", avgOfExp);
-                    await buttonClick(
-                        'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
-                    );
-                    // close button
-                    await page.waitForTimeout(2000);
-                    await buttonClick('div[aria-labelledby="post-apply-modal"]>button');
-                }
-            }
-            /* ------------------------------------------------------------ */
-
+              'div[class="display-flex justify-flex-end ph5 pv4"]>button'
+            )
+          ) {
+            state = true;
+          } else {
+            state = false;
+            break;
+          }
+          await page.waitForTimeout(2000);
         }
-        // To click on the next page
-        await buttonClick(
-            `ul[class="artdeco-pagination__pages artdeco-pagination__pages--number"]>li:nth-child(${lastIndexForPagination})`
-        );
-        i++;
-        console.log("finished Scrolling page N°" + (i - 1));
+        if (state == false) {
+          // review button and submit button
+          await page.waitForTimeout(2000);
+          await buttonClick(
+            'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
+          );
+          await page.waitForTimeout(2000);
+          await buttonClick(
+            'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
+          );
+          // close button
+          await page.waitForTimeout(2000);
+          await buttonClick('div[aria-labelledby="post-apply-modal"]>button');
+        }
+      }
+      /* ------------------------------------------------------------ */
     }
-
+    // To click on the next page
+    await buttonClick(
+      `ul[class="artdeco-pagination__pages artdeco-pagination__pages--number"]>li:nth-child(${lastIndexForPagination})`
+    );
+    i++;
+    console.log("finished Scrolling page N°" + (i - 1));
+  }
 }
 async function jobsApply() {
-    await buttonClick("#global-nav > div > nav > ul > li:nth-child(3)");
-    await waitForSelectorAndType('[id^="jobs-search-box-keyword-id"]', keyword);
-    await waitForSelectorAndType('[id^="jobs-search-box-location-id"]', location);
-    await page.waitForTimeout(1000);
-    await page.keyboard.press("Enter");
-    await jobCriteriaByTime();
-    await page.waitForTimeout(4000);
-    await jobCriteriaByType();
-    await page.waitForTimeout(2000);
-    // to hide messages dialog
-    await page.waitForTimeout(2000);
-    await FillAndApply();
+  await buttonClick("#global-nav > div > nav > ul > li:nth-child(3)");
+  await waitForSelectorAndType('[id^="jobs-search-box-keyword-id"]', keyword);
+  await waitForSelectorAndType('[id^="jobs-search-box-location-id"]', location);
+  await page.waitForTimeout(1000);
+  await page.keyboard.press("Enter");
+  await jobCriteriaByTime();
+  await page.waitForTimeout(3000);
+  await jobCriteriaByType();
+  await page.waitForTimeout(2000);
+  // to hide messages dialog
+  await page.waitForTimeout(2000);
+  await FillAndApply();
 }
 async function main() {
-    logs();
-    await initiliazer();
-    // await Login();
-    await jobsApply();
-    // await browser.close();
+  logs();
+  await initiliazer();
+  // await Login();
+  await jobsApply();
+  // await browser.close();
 }
 main();
