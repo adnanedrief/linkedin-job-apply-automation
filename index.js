@@ -173,14 +173,19 @@ async function FillAndApply() {
             });
           }
           /* -------------------------------------------------------------------------- */
+          
           await page.waitForTimeout(4000);
           await buttonClick(
-            'button[class="display-flex justify-flex-end ph5 pv4"]>button + button'
+            'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
+          );
+          await page.waitForTimeout(4000);
+          await buttonClick(
+            'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
           );
           // 'button[aria-label="Submit application"]'
           // close button
-          await page.waitForTimeout(2000);
-          await buttonClick('div[aria-labelledby="post-apply-modal"]>button');
+          // await page.waitForTimeout(2000);
+          // await buttonClick('div[aria-labelledby="post-apply-modal"]>button');
         }
       }
       /* ------------------------------------------------------------ */
