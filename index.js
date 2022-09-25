@@ -5,7 +5,7 @@ const email = data.email;
 const password = data.password;
 const keyword = data.keyword;
 const location = data.location;
-const avgOfExp = data.AvgExperience;
+var avgOfExp = data.AvgExperience;
 const periodOfTime = data.Period; // you can choose : Last 24 hours or Last week
 const browserPath = data.ChromePath;
 const resolution = data.resolution; // you can choose : --start-maximized or --window-size=1400,720
@@ -95,6 +95,15 @@ async function Scrolling() {
       .scrollIntoView();
   });
 }
+function changeValue(input, value) {
+  var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+    window.HTMLInputElement.prototype,
+    "value"
+  ).set;
+  nativeInputValueSetter.call(input, value);
+  var inputEvent = new Event("input", { bubbles: true });
+  input.dispatchEvent(inputEvent);
+}
 async function FillAndApply() {
   let i = 1;
   let lastIndexForPagination = 1;
@@ -137,9 +146,38 @@ async function FillAndApply() {
             'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
           );
           await page.waitForTimeout(2000);
+          /* -------------------------------------------------------------------------- */
+          /*                              find empty inputs                             */
+          if (
+            (await page.$(
+              'input[class="ember-text-field ember-view fb-single-line-text__input"]'
+            )) != null
+          ) {
+            await page.evaluate(() => {
+              const divElem = document.querySelector("div.pb4");
+              const inputElements = divElem.querySelectorAll("input");
+              console.log(inputElements);
+              let value = 3; // fix the avgOfExp undefined
+
+              var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype,
+                "value"
+              ).set;
+              for (let index = 0; index < inputElements.length; index++) {
+                setTimeout(() => {}, 2000);
+
+                nativeInputValueSetter.call(inputElements[index], value);
+                var inputEvent = new Event("input", { bubbles: true });
+                inputElements[index].dispatchEvent(inputEvent);
+              }
+            });
+          }
+          /* -------------------------------------------------------------------------- */
+          await page.waitForTimeout(4000);
           await buttonClick(
-            'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
+            'button[class="display-flex justify-flex-end ph5 pv4"]>button + button'
           );
+          // 'button[aria-label="Submit application"]'
           // close button
           await page.waitForTimeout(2000);
           await buttonClick('div[aria-labelledby="post-apply-modal"]>button');
