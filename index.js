@@ -173,19 +173,24 @@ async function FillAndApply() {
             });
           }
           /* -------------------------------------------------------------------------- */
-          
+
           await page.waitForTimeout(4000);
           await buttonClick(
             'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
           );
-          await page.waitForTimeout(4000);
+          await page.waitForTimeout(2000);
           await buttonClick(
             'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
           );
-          // 'button[aria-label="Submit application"]'
           // close button
-          // await page.waitForTimeout(2000);
-          // await buttonClick('div[aria-labelledby="post-apply-modal"]>button');
+          console.log("finally close button");
+          await page.waitForTimeout(3000);
+        
+          await page.evaluate(() => {
+            document
+              .querySelector("div.artdeco-modal__actionbar>button>span")
+              .click();
+          });
         }
       }
       /* ------------------------------------------------------------ */
