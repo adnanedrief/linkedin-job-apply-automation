@@ -128,9 +128,14 @@ async function FillAndApply() {
           await page.waitForTimeout(2000);
           if (
             // the next button
-            await buttonClick(
-              'div[class="display-flex justify-flex-end ph5 pv4"]>button'
-            )
+            await page.evaluate(() => {
+              setTimeout(() => {}, 3000);
+              document
+                .querySelector(
+                  'div[class="display-flex justify-flex-end ph5 pv4"]>button'
+                )
+                .click();
+            })
           ) {
             state = true;
           } else {
@@ -183,14 +188,12 @@ async function FillAndApply() {
               console.log(i);
               await page.evaluate(() => {
                 setTimeout(() => {}, 3000);
-                 document
-                .querySelector(
-                  'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
-                )
-                .click();
+                document
+                  .querySelector(
+                    'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
+                  )
+                  .click();
               });
-
-              
             } else break;
           } while (true);
           console.log("finally close button");
