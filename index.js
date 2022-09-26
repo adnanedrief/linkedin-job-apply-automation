@@ -137,15 +137,15 @@ async function FillAndApply() {
             state = false;
             break;
           }
-          await page.waitForTimeout(2000);
+          await page.waitForTimeout(3000);
         }
         if (state == false) {
           // review button and submit button
-          await page.waitForTimeout(2000);
+          await page.waitForTimeout(3000);
           await buttonClick(
             'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
           );
-          await page.waitForTimeout(2000);
+          await page.waitForTimeout(3000);
           /* -------------------------------------------------------------------------- */
           /*                              find empty inputs                             */
           if (
@@ -173,23 +173,30 @@ async function FillAndApply() {
           /* -------------------------------------------------------------------------- */
           let i = 0;
           do {
-            await page.waitForTimeout(2000);
+            await page.waitForTimeout(4000);
             if (
-              (await page.$(
+              !(await page.$(
                 'div[class*="artdeco-modal-overlay"]>div>div+div+div>button>span'
-              )) == null
+              ))
             ) {
               i++;
               console.log(i);
-              await buttonClick(
-                'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
-              );
+              await page.evaluate(() => {
+                setTimeout(() => {}, 3000);
+                 document
+                .querySelector(
+                  'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
+                )
+                .click();
+              });
+
+              
             } else break;
           } while (true);
-          await page.waitForTimeout(4000);
           console.log("finally close button");
+          await page.waitForTimeout(4000);
           await page.evaluate(() => {
-            setTimeout(() => {}, 2000);
+            setTimeout(() => {}, 3000);
             document
               .querySelector(
                 'div[class*="artdeco-modal-overlay"]>div>div+div+div>button>span'
@@ -226,7 +233,7 @@ async function main() {
   logs();
   await initiliazer();
   // await Login();
-  //await jobsApply();
+  await jobsApply();
   // await browser.close();
 }
 main();
