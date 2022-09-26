@@ -158,14 +158,12 @@ async function FillAndApply() {
               const inputElements = divElem.querySelectorAll("input");
               console.log(inputElements);
               let value = 3; // fix the avgOfExp undefined
-
               var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
                 window.HTMLInputElement.prototype,
                 "value"
               ).set;
               for (let index = 0; index < inputElements.length; index++) {
                 setTimeout(() => {}, 2000);
-
                 nativeInputValueSetter.call(inputElements[index], value);
                 var inputEvent = new Event("input", { bubbles: true });
                 inputElements[index].dispatchEvent(inputEvent);
@@ -173,22 +171,29 @@ async function FillAndApply() {
             });
           }
           /* -------------------------------------------------------------------------- */
+          let i = 0;
+          do {
+            await page.waitForTimeout(2000);
+            if (
+              (await page.$(
+                'div[class*="artdeco-modal-overlay"]>div>div+div+div>button>span'
+              )) == null
+            ) {
+              i++;
+              console.log(i);
+              await buttonClick(
+                'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
+              );
+            } else break;
+          } while (true);
 
-          await page.waitForTimeout(4000);
-          await buttonClick(
-            'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
-          );
-          await page.waitForTimeout(2000);
-          await buttonClick(
-            'div[class="display-flex justify-flex-end ph5 pv4"]>button + button'
-          );
-          // close button
-          console.log("finally close button");
-          await page.waitForTimeout(3000);
-        
+          console.log("finally close button");         
           await page.evaluate(() => {
+            setTimeout(() => {}, 2000);
             document
-              .querySelector("div.artdeco-modal__actionbar>button>span")
+              .querySelector(
+                'div[class*="artdeco-modal-overlay"]>div>div+div+div>button>span'
+              )
               .click();
           });
         }
