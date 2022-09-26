@@ -186,8 +186,8 @@ async function FillAndApply() {
               );
             } else break;
           } while (true);
-
-          console.log("finally close button");         
+          await page.waitForTimeout(4000);
+          console.log("finally close button");
           await page.evaluate(() => {
             setTimeout(() => {}, 2000);
             document
@@ -226,7 +226,7 @@ async function main() {
   logs();
   await initiliazer();
   // await Login();
-  await jobsApply();
+  //await jobsApply();
   // await browser.close();
 }
 main();
