@@ -11,7 +11,7 @@ LinkedIn job apply bot that automates job applications on LinkedIn using **Puppe
 
 setup your data in  config.json
 
-<img src="https://i.ibb.co/wdn1wCR/config-setup.png">
+<img src="https://github.com/adnanedrief/linkedin-job-apply-automation/blob/main/config-setup.png?raw=true">
 
  ## Usage
   `  node index.js` or  ` nodemon index`
