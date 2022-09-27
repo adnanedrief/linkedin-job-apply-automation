@@ -1,5 +1,5 @@
 {
-    "email": "your-email@your-domain.com",
+    "email": "your-email@example.com",
     "password": "your-password",
     "ChromePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     "keyword": "stage pfe",
@@ -7,7 +7,7 @@
     "Period": "Past Week",
     "AvgExperience": 2,
     "resolution": "--window-size=1300,700",
-    "baseURL": "https://www.linkedin.com/feed",
+    "baseURL": "https://www.linkedin.com/login",
     "numberOfPagination": 14,
     "numberOfOffersPerPage": 25
 }

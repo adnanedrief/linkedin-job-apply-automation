@@ -27,7 +27,7 @@ async function initiliazer() {
     executablePath: browserPath,
     args: [resolution],
     defaultViewport: null,
-    userDataDir: "./userData",
+    //userDataDir: "./userData",
     //uncomment userDataDir line  if you want to store your session and remove login() from main()
     // and change the baseURL to https://www.linkedin.com/feed
   });
@@ -235,7 +235,7 @@ async function jobsApply() {
 async function main() {
   logs();
   await initiliazer();
-  // await Login();
+   await Login();
   await jobsApply();
   await browser.close();
 }
