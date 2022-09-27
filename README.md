@@ -17,6 +17,10 @@ setup your data in  config.json
   `  node index.js` or  ` nodemon index`
  # Demo
  
+
+https://user-images.githubusercontent.com/76531566/192640790-aaea5bc0-0aae-437b-a26d-7620482ffcd3.mp4
+
+
  # ToDo in the future
 Improve some bugs and increase the speed.
 
