@@ -162,7 +162,7 @@ async function FillAndApply() {
               const divElem = document.querySelector("div.pb4");
               const inputElements = divElem.querySelectorAll("input");
               console.log(inputElements);
-              let value = 3; // fix the avgOfExp undefined
+              let value = 3;
               var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
                 window.HTMLInputElement.prototype,
                 "value"
@@ -194,8 +194,8 @@ async function FillAndApply() {
                   )
                   .click();
               });
-            } else break;
-          } while (true);
+            } else i=-2;
+          } while (i>=0);
           console.log("finally close button");
           await page.waitForTimeout(4000);
           await page.evaluate(() => {
@@ -237,6 +237,6 @@ async function main() {
   await initiliazer();
   // await Login();
   await jobsApply();
-  // await browser.close();
+  await browser.close();
 }
 main();
